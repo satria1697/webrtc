@@ -82,17 +82,9 @@ export default defineComponent({
     };
   },
   methods: {
-    handleSuccess(stream: any) {
-      if (this.video) {
-        this.video.srcObject = stream;
-      }
-    },
-    handleError(error: any) {
-      console.log("getUserMedia error:" + error.name, error);
-    },
     async handleRemoveVideo() {
-      if (this.video && this.video.srcObject) {
-        let stream: any = this.video.srcObject;
+      if (this.main.srcObject) {
+        let stream: any = this.main.srcObject;
         stream.getVideoTracks().forEach((track: MediaStreamTrack) => {
           track.enabled = false;
           track.stop();
@@ -131,9 +123,8 @@ export default defineComponent({
           remoteStream.addTrack(track);
         });
       };
-      const remote = document.getElementById("remoteVideo") as HTMLVideoElement;
 
-      remote!.srcObject = remoteStream;
+      this.remote.srcObject = remoteStream;
       const callDoc = firestore.collection("calls").doc();
       const offerCandidates = callDoc.collection("offerCandidates");
       const answerCandidates = callDoc.collection("answerCandidates");
@@ -194,6 +185,7 @@ export default defineComponent({
 
       const answerDescription = await pc.createAnswer();
       await pc.setLocalDescription(answerDescription);
+      console.log(pc.localDescription)
 
       const answer = {
         type: answerDescription.type,
