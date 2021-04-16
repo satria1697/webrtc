@@ -31,7 +31,6 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import adapter from "webrtc-adapter";
 import firebase from "firebase/app";
 import "firebase/firestore";
 const firebaseConfig = {
@@ -80,6 +79,9 @@ export default defineComponent({
       connecteduser: null,
       callCode: "",
     };
+  },
+  mounted() {
+    this.initVideo();
   },
   methods: {
     async handleRemoveVideo() {
@@ -185,7 +187,6 @@ export default defineComponent({
 
       const answerDescription = await pc.createAnswer();
       await pc.setLocalDescription(answerDescription);
-      console.log(pc.localDescription)
 
       const answer = {
         type: answerDescription.type,
